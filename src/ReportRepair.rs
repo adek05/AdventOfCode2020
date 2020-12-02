@@ -16,7 +16,7 @@ fn read_input() -> Result<Vec<i64>, io::Error> {
     Ok(x)
 }
 
-fn two_that_sum_to_target(input: &Vec<i64>, target: i64) -> Option<(i64, i64)> {
+fn two_that_sum_to_target(input: &[i64], target: i64) -> Option<(i64, i64)> {
     let mut frequency: HashMap<i64, i32> = HashMap::new();
     for number in input.iter() {
         frequency
@@ -36,12 +36,12 @@ fn two_that_sum_to_target(input: &Vec<i64>, target: i64) -> Option<(i64, i64)> {
     None
 }
 
-fn three_that_sum_to_2020(input: &Vec<i64>) -> Option<(i64, i64, i64)> {
+fn three_that_sum_to_2020(input: &[i64]) -> Option<(i64, i64, i64)> {
     let input_length = input.len();
     for i in 0..input_length {
-        let mut input_copy = input.clone();
+        let mut input_copy: Vec<i64> = input.to_vec();
         let value = input_copy.remove(i);
-        if let Some((a, b)) = two_that_sum_to_target(&input_copy, 2020 - value) {
+        if let Some((a, b)) = two_that_sum_to_target(input_copy.as_slice(), 2020 - value) {
             return Some((a, b, value));
         }
     }
