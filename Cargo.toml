@@ -7,7 +7,12 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+scan-rules = "0.2.0"
 
 [[bin]]
 name = "ReportRepair"
 path = "src/ReportRepair.rs"
+
+[[bin]]
+name = "PasswordPhilosophy"
+path = "src/PasswordPhilosophy.rs"
