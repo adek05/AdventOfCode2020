@@ -8,18 +8,18 @@ struct BoardingPass {
 }
 
 impl BoardingPass {
-    pub fn getRow(&self) -> u32 {
+    pub fn get_row(&self) -> u32 {
         let row_slice = self.code.get(0..7).unwrap();
         Self::code_slice_to_binary(row_slice)
     }
 
-    pub fn getSeat(&self) -> u32 {
+    pub fn get_seat(&self) -> u32 {
         let seat_slice = self.code.get(7..10).unwrap();
         Self::code_slice_to_binary(seat_slice)
     }
 
-    pub fn getSeatID(&self) -> u32 {
-        8 * self.getRow() + self.getSeat()
+    pub fn get_seat_id(&self) -> u32 {
+        8 * self.get_row() + self.get_seat()
     }
 
     fn code_slice_to_binary(code: &str) -> u32 {
@@ -51,6 +51,23 @@ fn read_input() -> Result<Vec<BoardingPass>, io::Error> {
 fn main() {
     let passes = read_input().unwrap();
 
-    let highest_seat_id = passes.iter().map(|pass| pass.getSeatID()).max();
+    let seat_ids = passes.iter().map(|pass| pass.get_seat_id());
+    let highest_seat_id = seat_ids.clone().max();
     println!("Part 1: Max seat id is: {}", highest_seat_id.unwrap());
+
+    let mut sorted_seat_ids = seat_ids.collect::<Vec<u32>>();
+    sorted_seat_ids.sort();
+    for i in 1..(sorted_seat_ids.len() - 1) {
+        if sorted_seat_ids.get(i).unwrap() - sorted_seat_ids.get(i - 1).unwrap() == 1
+            && sorted_seat_ids.get(i + 1).unwrap() - sorted_seat_ids.get(i).unwrap() == 2
+        {
+            println!(
+                "Part 2: My seat number is: {}",
+                sorted_seat_ids.get(i).unwrap() + 1
+            );
+            return;
+        }
+    }
 }
+
+// x-1, x, x+2
