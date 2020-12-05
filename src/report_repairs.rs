@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 use std::fs::File;
-use std::path;
 use std::io;
 use std::io::prelude::*;
+use std::path;
 
 fn read_input() -> Result<Vec<i64>, io::Error> {
     if !path::Path::new("in").exists() {
