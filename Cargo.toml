@@ -25,3 +25,7 @@ path = "src/TobogganTrajectory.rs"
 [[bin]]
 name = "PassportProcessing"
 path = "src/PassportProcessing.rs"
+
+[[bin]]
+name = "BinaryBoarding"
+path = "src/BinaryBoarding.rs"
