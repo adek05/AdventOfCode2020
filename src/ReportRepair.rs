@@ -4,11 +4,15 @@
 ///
 use std::collections::HashMap;
 use std::fs::File;
+use std::path;
 use std::io;
 use std::io::prelude::*;
 
 fn read_input() -> Result<Vec<i64>, io::Error> {
-    let file = File::open("../in/ReportRepairs.in")?;
+    if !path::Path::new("in").exists() {
+        return Err(io::Error::from(io::ErrorKind::NotFound));
+    }
+    let file = File::open("in/ReportRepairs.in")?;
     let x = io::BufReader::new(file)
         .lines()
         .map(|line| line.unwrap().parse::<i64>().unwrap())
@@ -48,6 +52,7 @@ fn three_that_sum_to_2020(input: &[i64]) -> Option<(i64, i64, i64)> {
     None
 }
 
+#[allow(dead_code)]
 fn main() {
     let input = read_input().unwrap();
 
