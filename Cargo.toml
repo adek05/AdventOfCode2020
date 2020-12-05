@@ -11,21 +11,21 @@ regex = "1.4.2"
 scan-rules = "0.2.0"
 
 [[bin]]
-name = "ReportRepair"
-path = "src/ReportRepair.rs"
+name = "report_repair"
+path = "src/report_repairs.rs"
 
 [[bin]]
-name = "PasswordPhilosophy"
-path = "src/PasswordPhilosophy.rs"
+name = "password_philosophy"
+path = "src/password_philosophy.rs"
 
 [[bin]]
-name = "TobogganTrajectory"
-path = "src/TobogganTrajectory.rs"
+name = "toboggan_trajectory"
+path = "src/toboggan_trajectory.rs"
 
 [[bin]]
-name = "PassportProcessing"
-path = "src/PassportProcessing.rs"
+name = "passport_processing"
+path = "src/passport_processing.rs"
 
 [[bin]]
-name = "BinaryBoarding"
-path = "src/BinaryBoarding.rs"
+name = "binary_boarding"
+path = "src/binary_boarding.rs"

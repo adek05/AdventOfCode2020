@@ -62,8 +62,8 @@ fn lines_to_passport(lines: &[String]) -> Passport {
     let fields: HashMap<PassportField, String> = lines
         .iter()
         .map(|line| {
-            line.split(" ").map(|field_value| {
-                let mut iter = field_value.split(":");
+            line.split(' ').map(|field_value| {
+                let mut iter = field_value.split(':');
                 let field_name = iter.next().unwrap();
                 let field_value = iter.next().unwrap();
 

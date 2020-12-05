@@ -80,10 +80,10 @@ fn main() {
         Move { right: 1, down: 2 },
     ];
 
-    let multiplication = moves
+    let multiplication: u64 = moves
         .iter()
         .map(|movement| count_hit_trees_for_move(&slope, movement))
-        .fold(1, |acc, next| acc * next);
+        .product();
     println!(
         "[Part 1] Product of number of trees hit on all slopes: {}",
         multiplication
