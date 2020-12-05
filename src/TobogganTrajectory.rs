@@ -26,10 +26,15 @@ struct Position {
     column: usize,
 }
 
+struct Move {
+    right: usize,
+    down: usize,
+}
+
 impl Position {
-    pub fn next_pos(&self, grid: &Grid) -> Position {
-        let row = self.row + 1;
-        let column = (self.column + 3) % grid.width();
+    pub fn next_pos(&self, movement: &Move, grid: &Grid) -> Position {
+        let row = self.row + movement.down;
+        let column = (self.column + movement.right) % grid.width();
         Position { row, column }
     }
 }
@@ -46,18 +51,41 @@ fn read_input() -> Result<Grid, io::Error> {
     Ok(Grid { grid })
 }
 
-#[allow(dead_code)]
-fn main() {
-    let slope: Grid = read_input().unwrap();
-
+fn count_hit_trees_for_move(slope: &Grid, movement: &Move) -> u64 {
     let mut position = Position { row: 0, column: 0 };
     let mut number_of_hit_trees = 0;
     while position.row < slope.height() {
         if slope.has_tree_at(&position) {
             number_of_hit_trees += 1;
         }
-        position = position.next_pos(&slope);
+        position = position.next_pos(movement, &slope);
     }
+    number_of_hit_trees
+}
 
-    println!("Number of trees on the way: {}", number_of_hit_trees);
+#[allow(dead_code)]
+fn main() {
+    let slope: Grid = read_input().unwrap();
+
+    println!(
+        "[Part 1] Number of trees on the way: {}",
+        count_hit_trees_for_move(&slope, &Move { right: 3, down: 1 })
+    );
+
+    let moves = [
+        Move { right: 1, down: 1 },
+        Move { right: 3, down: 1 },
+        Move { right: 5, down: 1 },
+        Move { right: 7, down: 1 },
+        Move { right: 1, down: 2 },
+    ];
+
+    let multiplication = moves
+        .iter()
+        .map(|movement| count_hit_trees_for_move(&slope, movement))
+        .fold(1, |acc, next| acc * next);
+    println!(
+        "[Part 1] Product of number of trees hit on all slopes: {}",
+        multiplication
+    );
 }
