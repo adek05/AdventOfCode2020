@@ -1,7 +1,3 @@
-/// To run:
-///
-///   rustc ReportRepair.rs && ./ReportRepair
-///
 use std::collections::HashMap;
 use std::fs::File;
 use std::path;
