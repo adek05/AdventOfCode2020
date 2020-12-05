@@ -16,3 +16,7 @@ path = "src/ReportRepair.rs"
 [[bin]]
 name = "PasswordPhilosophy"
 path = "src/PasswordPhilosophy.rs"
+
+[[bin]]
+name = "TobogganTrajectory"
+path = "src/TobogganTrajectory.rs"
