@@ -29,3 +29,7 @@ path = "src/passport_processing.rs"
 [[bin]]
 name = "binary_boarding"
 path = "src/binary_boarding.rs"
+
+[[bin]]
+name = "custom_customs"
+path = "src/custom_customs.rs"
