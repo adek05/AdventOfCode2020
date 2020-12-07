@@ -33,3 +33,7 @@ path = "src/binary_boarding.rs"
 [[bin]]
 name = "custom_customs"
 path = "src/custom_customs.rs"
+
+[[bin]]
+name = "handy_haversacks"
+path = "src/handy_haversacks.rs"
