@@ -39,16 +39,23 @@ fn two_that_sum_to_target(input: &[i64], target: i64) -> Option<(i64, i64)> {
     None
 }
 
-fn main() {
+fn find_weakness(stream: &[i64]) -> Option<i64> {
     let window: usize = 25;
+    for i in window..stream.len() {
+        if two_that_sum_to_target(&stream[i - window..i], stream[i]).is_none() {
+            return Some(stream[i]);
+        }
+    }
+    None
+}
+
+fn main() {
     if let Ok(stream) = read_input() {
-        for i in window..stream.len() {
-            if two_that_sum_to_target(&stream[i - window..i], stream[i]).is_none() {
-                println!(
-                    "First number that is not a sum of two number in last {}: {} at row {}",
-                    window, stream[i], i
-                );
-            }
+        if let Some(weakness) = find_weakness(&stream) {
+            println!(
+                "First number that is not a sum of two number in last {}",
+                weakness
+            );
         }
     }
 }
