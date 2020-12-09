@@ -49,6 +49,26 @@ fn find_weakness(stream: &[i64]) -> Option<i64> {
     None
 }
 
+fn sequence_that_sums_to(n: i64, stream: &[i64]) -> i64 {
+    let mut sum = stream[0];
+    let mut left = 0;
+    let mut right = 1;
+
+    while sum != n && right < stream.len() {
+        if sum < n {
+            sum += stream[right];
+            right += 1;
+        } else {
+            sum -= stream[left];
+            left += 1;
+        }
+    }
+    // println!("Left: {}, Right: {}", left, right);
+    *stream[left..right].iter().max().unwrap() + 
+    *stream[left..right].iter().min().unwrap()
+    
+}
+
 fn main() {
     if let Ok(stream) = read_input() {
         if let Some(weakness) = find_weakness(&stream) {
@@ -56,6 +76,9 @@ fn main() {
                 "First number that is not a sum of two number in last {}",
                 weakness
             );
+
+            let res = sequence_that_sums_to(weakness, &stream);
+            println!("Encryption weakness: {}", res);
         }
     }
 }
