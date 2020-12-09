@@ -1,0 +1,54 @@
+use std::collections::HashMap;
+use std::fs::File;
+use std::io;
+use std::io::prelude::*;
+use std::path;
+
+fn read_input() -> Result<Vec<i64>, String> {
+    if !path::Path::new("in").exists() {
+        return Err("File not found".to_string());
+    }
+    let file = File::open("in/EncodingError.in").map_err(|_| "Input file not found".to_string())?;
+    io::BufReader::new(file)
+        .lines()
+        .map(|line| {
+            line.unwrap()
+                .parse::<i64>()
+                .map_err(|_| "Couldn't parse as i64".to_string())
+        })
+        .collect()
+}
+
+fn two_that_sum_to_target(input: &[i64], target: i64) -> Option<(i64, i64)> {
+    let mut frequency: HashMap<i64, i32> = HashMap::new();
+    for number in input.iter() {
+        frequency
+            .entry(*number)
+            .and_modify(|freq| *freq += 1)
+            .or_insert(1);
+    }
+
+    for number in input {
+        if let Some(freq) = frequency.get(&(target - number)) {
+            if freq == &1 {
+                return Some((*number, target - number));
+            }
+        }
+    }
+
+    None
+}
+
+fn main() {
+    let window: usize = 25;
+    if let Ok(stream) = read_input() {
+        for i in window..stream.len() {
+            if two_that_sum_to_target(&stream[i - window..i], stream[i]).is_none() {
+                println!(
+                    "First number that is not a sum of two number in last {}: {} at row {}",
+                    window, stream[i], i
+                );
+            }
+        }
+    }
+}
