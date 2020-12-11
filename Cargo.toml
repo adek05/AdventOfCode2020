@@ -50,3 +50,7 @@ path = "src/encoding_error.rs"
 [[bin]]
 name = "adapter_array"
 path = "src/adapter_array.rs"
+
+[[bin]]
+name = "seating_system"
+path = "src/seating_system.rs"
