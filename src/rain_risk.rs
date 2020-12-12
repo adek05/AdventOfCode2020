@@ -70,13 +70,19 @@ fn turn(start: &ShipState, turn: &Turn) -> ShipState {
     position
 }
 
-fn do_move(start: &ShipState, m: &Move) -> ShipState {
-    let mut new_position = start.clone();
+fn move_ship(start: &ShipState, m: &Move) -> ShipState {
+    let mut new_state = start.clone();
+    new_state.pos = move_point(&new_state.pos, m);
+    new_state
+}
+
+fn move_point(pos: &Position, m: &Move) -> Position {
+    let mut new_position = pos.clone();
     match m.d {
-        Direction::North => new_position.pos.ns += m.offset,
-        Direction::South => new_position.pos.ns -= m.offset,
-        Direction::East => new_position.pos.ew += m.offset,
-        Direction::West => new_position.pos.ew -= m.offset,
+        Direction::North => new_position.ns += m.offset,
+        Direction::South => new_position.ns -= m.offset,
+        Direction::East =>  new_position.ew += m.offset,
+        Direction::West =>  new_position.ew -= m.offset,
     };
     new_position
 }
@@ -134,7 +140,7 @@ fn main() {
             };
 
             let end: ShipState = actions.iter().fold(start, |acc, action| match action {
-                Action::Move(m) => do_move(&acc, m),
+                Action::Move(m) => move_ship(&acc, m),
                 Action::Turn(t) => turn(&acc, t),
                 Action::Forward(offset) => forward(&acc, *offset),
             });
