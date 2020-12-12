@@ -81,8 +81,8 @@ fn move_point(pos: &Position, m: &Move) -> Position {
     match m.d {
         Direction::North => new_position.ns += m.offset,
         Direction::South => new_position.ns -= m.offset,
-        Direction::East =>  new_position.ew += m.offset,
-        Direction::West =>  new_position.ew -= m.offset,
+        Direction::East => new_position.ew += m.offset,
+        Direction::West => new_position.ew -= m.offset,
     };
     new_position
 }
@@ -100,6 +100,31 @@ fn forward(start: &ShipState, offset: i32) -> ShipState {
         heading: start.heading,
         pos: new_position,
     }
+}
+
+fn rotate_waypoint(waypoint: &Position, turn: &Turn) -> Position {
+    let mut position = waypoint.clone();
+
+    let mut degrees = turn.d % 360;
+    if Rotation::Left == turn.r {
+        degrees = 360 - degrees;
+    }
+    while degrees > 0 {
+        let (ew, ns) = (position.ns, -position.ew);
+        position.ns = ns;
+        position.ew = ew;
+
+        degrees -= 90;
+    }
+    position
+}
+
+fn forward_to_waypoint(waypoint: &Position, ship_state: &ShipState, n_times: i32) -> ShipState {
+    let mut new_ship_state = ship_state.clone();
+    new_ship_state.pos.ns += n_times * waypoint.ns;
+    new_ship_state.pos.ew += n_times * waypoint.ew;
+
+    new_ship_state
 }
 
 fn read_input() -> Result<Vec<Action>, String> {
@@ -134,21 +159,46 @@ fn read_input() -> Result<Vec<Action>, String> {
 fn main() {
     match read_input() {
         Ok(actions) => {
-            let start = ShipState {
-                heading: Direction::East,
-                pos: Position { ns: 0, ew: 0 },
-            };
+            {
+                let start = ShipState {
+                    heading: Direction::East,
+                    pos: Position { ns: 0, ew: 0 },
+                };
 
-            let end: ShipState = actions.iter().fold(start, |acc, action| match action {
-                Action::Move(m) => move_ship(&acc, m),
-                Action::Turn(t) => turn(&acc, t),
-                Action::Forward(offset) => forward(&acc, *offset),
-            });
+                let end: ShipState = actions.iter().fold(start, |acc, action| match action {
+                    Action::Move(m) => move_ship(&acc, m),
+                    Action::Turn(t) => turn(&acc, t),
+                    Action::Forward(offset) => forward(&acc, *offset),
+                });
 
-            println!(
-                "Part 1: Manhattan distance from start is: {}",
-                end.pos.ew.abs() + end.pos.ns.abs()
-            );
+                println!(
+                    "Part 1: Manhattan distance from start is: {}",
+                    end.pos.ew.abs() + end.pos.ns.abs()
+                );
+            }
+
+            {
+                let start = ShipState {
+                    heading: Direction::East,
+                    pos: Position { ns: 0, ew: 0 },
+                };
+                let waypoint = Position { ns: 1, ew: 10 };
+
+                let (end, _): (ShipState, Position) = actions.iter().fold(
+                    (start, waypoint),
+                    |(state, waypoint), action| match action {
+                        Action::Move(m) => (state, move_point(&waypoint, m)),
+                        Action::Turn(t) => (state, rotate_waypoint(&waypoint, t)),
+                        Action::Forward(times) => {
+                            (forward_to_waypoint(&waypoint, &state, *times), waypoint)
+                        }
+                    },
+                );
+                println!(
+                    "Part 1: Manhattan distance from start is: {}",
+                    end.pos.ew.abs() + end.pos.ns.abs()
+                );
+            }
         }
         Err(e) => println!("{}", e),
     }
