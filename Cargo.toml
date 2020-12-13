@@ -58,3 +58,7 @@ path = "src/seating_system.rs"
 [[bin]]
 name = "rain_risk"
 path = "src/rain_risk.rs"
+
+[[bin]]
+name = "shuttle_search"
+path = "src/shuttle_search.rs"
