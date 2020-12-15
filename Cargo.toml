@@ -62,3 +62,7 @@ path = "src/rain_risk.rs"
 [[bin]]
 name = "shuttle_search"
 path = "src/shuttle_search.rs"
+
+[[bin]]
+name = "docking_data"
+path = "src/docking_data.rs"
