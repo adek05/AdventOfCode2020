@@ -13,7 +13,7 @@ struct Bitmask(String);
 
 struct Program {
     bitmask: Bitmask,
-    memory: HashMap<u64, u64>,
+    memory: HashMap<u64, String>,
 }
 
 enum Operation {
@@ -29,7 +29,7 @@ fn execute_operation(p: Program, op: &Operation) -> Program {
         },
         Operation::SetValue(mem_location, value) => {
             let mut memory = p.memory;
-            memory.insert(*mem_location, apply_bitmask(*value, &p.bitmask));
+            memory.insert(*mem_location, format!("{:b}", apply_bitmask(*value, &p.bitmask)));
             Program {
                 bitmask: p.bitmask,
                 memory,
@@ -78,7 +78,7 @@ fn main() {
             );
             println!(
                 "Part 1. Sum of all memory locations set is: {}",
-                program_end.memory.values().sum::<u64>()
+                program_end.memory.values().map(|value| u64::from_str_radix(value, 2).unwrap()).sum::<u64>(),
             );
         },
         Err(err) => {
