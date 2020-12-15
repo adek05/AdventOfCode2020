@@ -29,7 +29,7 @@ fn execute_operation(p: Program, op: &Operation) -> Program {
         },
         Operation::SetValue(mem_location, value) => {
             let mut memory = p.memory;
-            memory.insert(*mem_location, format!("{:b}", apply_bitmask(*value, &p.bitmask)));
+            memory.insert(*mem_location, format!("{:037b}", apply_bitmask(*value, &p.bitmask)));
             Program {
                 bitmask: p.bitmask,
                 memory,
