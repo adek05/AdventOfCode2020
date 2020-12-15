@@ -116,7 +116,6 @@ fn main() {
                 program_end
                     .memory
                     .values()
-                    // .map(|value| u64::from_str_radix(value, 2).unwrap())
                     .sum::<u64>(),
             );
 
