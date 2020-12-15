@@ -30,10 +30,10 @@ fn read_input() -> Result<(u64, Vec<(u64, u64)>), String> {
 fn find_time(buses: &[(u64, u64)]) -> u64 {
     let mut lcm = 1;
     let mut first_matching = 0;
-    for (mut modulus, bus_id) in buses {
-        modulus %= bus_id;
+    for (mut relative_to_first, bus_id) in buses {
+        relative_to_first %= bus_id;
         let mut cur = first_matching;
-        while (cur + modulus) % bus_id != 0 {
+        while (cur + relative_to_first) % bus_id != 0 {
             cur += lcm;
         }
         first_matching = cur;
