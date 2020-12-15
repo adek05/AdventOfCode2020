@@ -38,10 +38,6 @@ fn find_time(buses: &[(u64, u64)]) -> u64 {
         }
         first_matching = cur;
         lcm *= *bus_id; // Should be real LCM, but all input numbers are prime.
-        println!(
-            "Looking for bus_id {} modulus {}. Current lcm = {} and first_matching = {}",
-            bus_id, modulus, lcm, first_matching
-        );
     }
     first_matching
 }
