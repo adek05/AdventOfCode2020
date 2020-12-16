@@ -21,7 +21,12 @@ fn next_number(
     };
     state
         .entry(next_to_be_spoken as u64)
-        .and_modify(|v| v.push(current_pos))
+        .and_modify(|v| {
+            v.push(current_pos);
+            if v.len() > 2 {
+                v.remove(0);
+            }
+        })
         .or_insert_with(|| vec![current_pos]);
     (state, next_to_be_spoken as u64)
 }
@@ -44,12 +49,13 @@ fn main() {
     if let Ok(initial_numbers) = read_input() {
         let mut state: HashMap<u64, Vec<usize>> =
             HashMap::from_iter(initial_numbers.iter().enumerate().map(|(a, b)| (*b, vec![a])));
-
+        
         let mut last_number = *initial_numbers.last().unwrap();
         let current_pos = initial_numbers.len();
-        for pos in current_pos..2020 {
+        for pos in current_pos..30000000 {
             let (new_state, new_last_number) = next_number(state, pos, last_number);
             state = new_state;
+            
             last_number = new_last_number;
         }
         println!("Part 1. 2020th number is: {}", last_number);
