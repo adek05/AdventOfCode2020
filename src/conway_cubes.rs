@@ -8,11 +8,11 @@ use std::io::prelude::*;
 use std::iter::FromIterator;
 use std::path;
 
-type Coord = (i32, i32, i32);
+type Coord = (i32, i32, i32, i32);
 
 fn get_neighbors(center: &Coord) -> HashSet<Coord> {
-    iproduct!(&[-1, 0, 1], &[-1, 0, 1], &[-1, 0, 1])
-        .map(|(x, y, z)| (center.0 + x, center.1 + y, center.2 + z))
+    iproduct!(&[-1, 0, 1], &[-1, 0, 1], &[-1, 0, 1], &[-1, 0, 1])
+        .map(|(x, y, z, w)| (center.0 + x, center.1 + y, center.2 + z, center.3 + w))
         .filter(|cube| cube != center)
         .collect()
 }
@@ -31,7 +31,7 @@ fn read_input() -> Result<Vec<Coord>, String> {
                 .enumerate()
                 .filter_map(|(y, state)| {
                     if state == '#' {
-                        Some((x as i32, y as i32, 0 as i32))
+                        Some((x as i32, y as i32, 0 as i32, 0 as i32))
                     } else {
                         None
                     }
@@ -39,7 +39,6 @@ fn read_input() -> Result<Vec<Coord>, String> {
                 .collect::<Vec<Coord>>()
         })
         .collect())
-    // .collect::<Result<_, _>>()
 }
 
 fn main() {
