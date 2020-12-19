@@ -74,3 +74,7 @@ path = "src/rambunctious_recitation.rs"
 [[bin]]
 name = "ticket_translation"
 path = "src/ticket_translation.rs"
+
+[[bin]]
+name = "conway_cubes"
+path = "src/conway_cubes.rs"
