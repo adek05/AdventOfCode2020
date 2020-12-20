@@ -82,3 +82,7 @@ path = "src/conway_cubes.rs"
 [[bin]]
 name = "operation_order"
 path = "src/operation_order.rs"
+
+[[bin]]
+name = "monster_messages"
+path = "src/monster_messages.rs"
