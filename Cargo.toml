@@ -78,3 +78,7 @@ path = "src/ticket_translation.rs"
 [[bin]]
 name = "conway_cubes"
 path = "src/conway_cubes.rs"
+
+[[bin]]
+name = "operation_order"
+path = "src/operation_order.rs"
