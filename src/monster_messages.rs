@@ -1,6 +1,7 @@
 #[macro_use]
 extern crate scan_rules;
 
+use std::collections::HashSet;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io;
@@ -83,12 +84,23 @@ fn read_input() -> Result<(Vec<(usize, Rule)>, Vec<String>), String> {
 
 fn main() {
     if let Ok((rules, messages)) = read_input() {
-        let all_rules: HashMap<usize, Rule> = HashMap::from_iter(rules);
+        let mut all_rules: HashMap<usize, Rule> = HashMap::from_iter(rules);
 
-        let n_valid_messages = messages
-            .iter()
-            .filter(|input| Some("") == consume(input, &all_rules[&0], &all_rules))
-            .count();
-        println!("Part 1. Number of valid messages: {}", n_valid_messages);
+        let mut valid_messages: HashSet<&str> = HashSet::new();
+        for i in 1..10 {
+            for j in 1..10 {
+                let mut seq = vec![];
+                seq.extend(vec![42; j]);
+                seq.extend(vec![42; i]);
+                seq.extend(vec![31; i]);
+                all_rules.insert(0, Rule::Sequence(seq));
+                valid_messages.extend(messages
+                    .iter()
+                    .filter(|input| Some("") == consume(input, &all_rules[&0], &all_rules))
+                    .map(|s| s.as_str()));
+            }
+        }
+
+        println!("Part 2. Number of valid messages: {}", valid_messages.len());
     }
 }
