@@ -59,6 +59,7 @@ fn parse_rule(line: &str) -> (usize, Rule) {
     ).unwrap()
 }
 
+#[allow(clippy::type_complexity)]
 fn read_input() -> Result<(Vec<(usize, Rule)>, Vec<String>), String> {
     if !path::Path::new("in").exists() {
         return Err("File not found".to_string());

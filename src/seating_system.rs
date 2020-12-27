@@ -1,7 +1,6 @@
 #[macro_use]
 extern crate itertools;
 
-use std::collections::HashMap;
 use std::fs::File;
 use std::io;
 use std::io::prelude::*;
@@ -11,9 +10,8 @@ use std::path;
 const EMPTY: char = 'L';
 const OCCUPIED: char = '#';
 
-type Grid<T> = Vec<Vec<T>>;
 
-fn read_input() -> Result<Grid<char>, String> {
+fn read_input() -> Result<Vec<Vec<char>>, String> {
     if !path::Path::new("in").exists() {
         return Err("File not found".to_string());
     }
@@ -25,7 +23,7 @@ fn read_input() -> Result<Grid<char>, String> {
         .collect())
 }
 
-fn is_seat(seats: &Grid<char>, row: i32, column: i32) -> Option<bool> {
+fn is_seat(seats: &[Vec<char>], row: i32, column: i32) -> Option<bool> {
     match seats.get(row as usize) {
         None => None,
         Some(r) => match r.get(column as usize) {
@@ -35,7 +33,7 @@ fn is_seat(seats: &Grid<char>, row: i32, column: i32) -> Option<bool> {
     }
 }
 
-fn is_occupied(seats: &Grid<char>, row: i32, column: i32) -> Option<bool> {
+fn is_occupied(seats: &[Vec<char>], row: i32, column: i32) -> Option<bool> {
     match seats.get(row as usize) {
         None => None,
         Some(r) => match r.get(column as usize) {
@@ -45,20 +43,7 @@ fn is_occupied(seats: &Grid<char>, row: i32, column: i32) -> Option<bool> {
     }
 }
 
-fn count_occupied(seats: &Grid<char>, row: i32, column: i32) -> usize {
-    iproduct!(&[-1, 0, 1], &[-1, 0, 1])
-        .filter(|x| x != &(&0, &0))
-        .map(|(row_offset, column_offset)| {
-            if Some(true) == is_occupied(seats, row + row_offset, column + column_offset) {
-                1
-            } else {
-                0
-            }
-        })
-        .sum()
-}
-
-fn count_occupied_2(seats: &Grid<char>, row: i32, column: i32) -> usize {
+fn count_occupied_2(seats: &[Vec<char>], row: i32, column: i32) -> usize {
     iproduct!(&[-1, 0, 1], &[-1, 0, 1])
         .filter(|x| x != &(&0, &0))
         .map(|(row_offset, column_offset)| {
