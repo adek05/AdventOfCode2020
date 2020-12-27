@@ -86,3 +86,7 @@ path = "src/operation_order.rs"
 [[bin]]
 name = "monster_messages"
 path = "src/monster_messages.rs"
+
+[[bin]]
+name = "jurassic_jigsaw"
+path = "src/jurassic_jigsaw.rs"

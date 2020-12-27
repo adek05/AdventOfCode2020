@@ -33,32 +33,37 @@ impl Tile {
 }
 
 fn are_borders_matching(border_a: &str, border_b: &str) -> bool {
-    border_a == border_b 
-    // || border_a == border_b.chars().rev().collect::<String>().as_str()
+    border_a == border_b || border_a == border_b.chars().rev().collect::<String>().as_str()
 }
 
 fn find_corners(tiles: &[Tile]) -> Vec<Tile> {
+    // TileID -> Tile
     let tiles_map: HashMap<usize, Tile> =
         HashMap::from_iter(tiles.iter().map(|tile| (tile.number, tile.clone())));
     let mut graph: HashMap<usize, HashSet<usize>> = HashMap::new();
 
-    for (i, tile) in tiles.iter().enumerate() {
-        for j in (i + 1)..tiles.len() {
-            for (a, border_a) in tiles[i].get_borders().iter().enumerate() {
-                for border_b in &tiles[j].get_borders()[a + 1..] {
+    for (i, tile_a) in tiles.iter().enumerate() {
+        for (j, tile_b) in tiles.iter().enumerate() {
+            // Only skip when tiles are the same.
+            if i == j {
+                continue;
+            };
+
+            for border_a in &tile_a.get_borders() {
+                for border_b in &tile_b.get_borders() {
                     if are_borders_matching(border_a, border_b) {
                         graph
-                            .entry(tile.number)
+                            .entry(tile_a.number)
                             .and_modify(|v| {
-                                v.insert(tiles[j].number);
+                                v.insert(tile_b.number);
                             })
-                            .or_insert_with(|| HashSet::from_iter(vec![tiles[j].number]));
+                            .or_insert_with(|| HashSet::from_iter(vec![tile_b.number]));
                         graph
-                            .entry(tiles[j].number)
+                            .entry(tile_b.number)
                             .and_modify(|v| {
-                                v.insert(tile.number);
+                                v.insert(tile_a.number);
                             })
-                            .or_insert_with(|| HashSet::from_iter(vec![tile.number]));
+                            .or_insert_with(|| HashSet::from_iter(vec![tile_a.number]));
                     }
                 }
             }
@@ -70,7 +75,6 @@ fn find_corners(tiles: &[Tile]) -> Vec<Tile> {
         .iter()
         .filter_map(|(k, v)| {
             if v.len() == 2 {
-                println!("Tile: {:?}", tiles_map[k]);
                 Some(tiles_map[k].clone())
             } else {
                 None
@@ -96,7 +100,7 @@ fn read_input() -> Result<Vec<Tile>, String> {
         return Err("File not found".to_string());
     }
     let file =
-        File::open("in/JurassicJigsaw2.in").map_err(|_| "Input file not found".to_string())?;
+        File::open("in/JurassicJigsaw.in").map_err(|_| "Input file not found".to_string())?;
     let input: Vec<String> = io::BufReader::new(file)
         .lines()
         .map(|line| line.unwrap())
@@ -112,5 +116,9 @@ fn main() {
     if let Ok(tiles) = read_input() {
         let c = find_corners(&tiles);
         assert_eq!(c.len(), 4);
+        println!(
+            "Part 1. Product of corner tile IDs: {}",
+            c.iter().map(|tile| tile.number).product::<usize>()
+        );
     }
 }
