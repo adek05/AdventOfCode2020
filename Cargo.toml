@@ -94,3 +94,7 @@ path = "src/jurassic_jigsaw.rs"
 [[bin]]
 name = "allergen_assessment"
 path = "src/allergen_assessment.rs"
+
+[[bin]]
+name = "crab_combat"
+path = "src/crab_combat.rs"
