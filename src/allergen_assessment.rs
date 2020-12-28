@@ -4,6 +4,7 @@
 extern crate scan_rules;
 
 use scan_rules::scanner::Word;
+use std::collections::HashMap;
 use std::collections::HashSet;
 use std::fs::File;
 use std::io;
@@ -46,15 +47,16 @@ fn main() {
             .flat_map(|product| product.allergens.clone())
             .collect();
         let mut ingredients_with_allergen: HashSet<String> = HashSet::new();
+        let mut allergen_to_ingredients: HashMap<String, HashSet<String>> = HashMap::new();
         for allergen in all_allergens {
-            ingredients_with_allergen.extend(
-                products
-                    .iter()
-                    .filter(|product| product.allergens.contains(&allergen))
-                    .map(|product| product.ingredients.clone())
-                    .fold_first(|acc, p| acc.intersection(&p).cloned().collect())
-                    .unwrap(),
-            );
+            let ingredients: HashSet<String> = products
+                .iter()
+                .filter(|product| product.allergens.contains(&allergen))
+                .map(|product| product.ingredients.clone())
+                .fold_first(|acc, p| acc.intersection(&p).cloned().collect())
+                .unwrap();
+            ingredients_with_allergen.extend(ingredients.clone());
+            allergen_to_ingredients.insert(allergen, ingredients);
         }
 
         println!(
@@ -66,6 +68,33 @@ fn main() {
                     .difference(&ingredients_with_allergen)
                     .count())
                 .sum::<usize>()
+        );
+
+        let mut res: Vec<(String, String)> = vec![];
+        while !allergen_to_ingredients.is_empty() {
+            let (allergen_ref, ingredients_ref) = allergen_to_ingredients
+                .iter()
+                .find(|(_, ingredients)| ingredients.len() == 1)
+                .unwrap();
+            let allergen = allergen_ref.to_string();
+            let ingredient = ingredients_ref.iter().next().unwrap().clone();
+            res.push((allergen.clone(), ingredient.clone()));
+            allergen_to_ingredients.remove(&allergen);
+            let keys: Vec<String> = allergen_to_ingredients.keys().cloned().collect();
+            keys.iter().for_each(|a| {
+                allergen_to_ingredients.entry(a.clone()).and_modify(|is| {
+                    is.remove(&ingredient);
+                });
+            });
+        }
+        res.sort();
+        println!(
+            "Part 2. Canonical dangerous ingredient list is: {}",
+            res.iter()
+                .map(|(_, i)| i)
+                .cloned()
+                .collect::<Vec<String>>()
+                .join(",")
         );
     }
 }
