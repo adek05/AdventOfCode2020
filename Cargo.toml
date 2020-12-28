@@ -90,3 +90,7 @@ path = "src/monster_messages.rs"
 [[bin]]
 name = "jurassic_jigsaw"
 path = "src/jurassic_jigsaw.rs"
+
+[[bin]]
+name = "allergen_assessment"
+path = "src/allergen_assessment.rs"
