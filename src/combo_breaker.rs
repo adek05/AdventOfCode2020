@@ -1,4 +1,4 @@
-const big_prime: u64 = 20201227;
+const BIG_PRIME: u64 = 20201227;
 
 fn find_loop_size(public_key: u64, subject: u64) -> u64 {
     let mut value = 1;
@@ -6,7 +6,7 @@ fn find_loop_size(public_key: u64, subject: u64) -> u64 {
     loop {
         loop_size += 1;
         value *= subject;
-        value %= big_prime;
+        value %= BIG_PRIME;
         if value == public_key {
             return loop_size;
         }
@@ -17,7 +17,7 @@ fn compute_key(loop_size: u64, subject: u64) -> u64 {
     let mut v = 1;
     for _ in 0..loop_size {
         v *= subject;
-        v %= big_prime;
+        v %= BIG_PRIME;
     }
     v
 }
