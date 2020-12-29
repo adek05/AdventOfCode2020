@@ -102,3 +102,7 @@ path = "src/crab_combat.rs"
 [[bin]]
 name = "crab_cups"
 path = "src/crab_cups.rs"
+
+[[bin]]
+name = "lobby_layout"
+path = "src/lobby_layout.rs"
