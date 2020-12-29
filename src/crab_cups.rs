@@ -1,44 +1,89 @@
-fn find_insert_idx(current_cup: &u32, circle: &[u32], modulo: &u32) -> usize {
-    let mut current_cup: u32 = *current_cup;
-    loop {
-        current_cup = (current_cup + modulo - 1) % modulo;
-        if current_cup == 0 {
-            current_cup = 9;
-        }
-        if let Some(idx) = circle.iter().position(|cup| cup == &current_cup) {
-            return idx;
-        }
-    }
+use std::collections::HashMap;
+
+fn into_linked_list(mut cups: Vec<u64>) -> HashMap<u64, u64> {
+    let mut cups2 = cups.clone();
+    cups2.push(cups[0]);
+
+    cups.insert(0, *cups.last().unwrap());
+    cups.into_iter().zip(cups2).collect()
 }
 
-fn crab_move(current_cup: &u32, mut circle: Vec<u32>) -> (u32, Vec<u32>) {
-    if let Some(idx) = circle.iter().position(|cup| cup == current_cup) {
-        let total_cups = circle.len();
-        let mut removed_cups: Vec<u32> = vec![];
-        circle.extend(&circle.clone());
-        for _ in idx + 1..idx + 4 {
-            removed_cups.push(circle.remove(idx + 1));
+fn find_insert_index2(mut current_cup: u64, modulo: u64, removed_range: &[u64]) -> u64 {
+    loop {
+        current_cup -= 1;
+        if current_cup == 0 {
+            current_cup = modulo;
         }
-        circle = circle[idx..(idx + total_cups - 3)].to_vec();
-
-        let insert_idx = find_insert_idx(current_cup, &circle, &(total_cups as u32));
-
-        let tail = circle.split_off(insert_idx + 1);
-        circle.extend(removed_cups);
-        circle.extend(tail);
-        return (circle[1], circle);
+        if removed_range
+            .iter()
+            .find(|value| *value == &current_cup)
+            .is_none()
+        {
+            return current_cup;
+        }
     }
-    panic!("Unreachable")
+    panic!("Unreachable");
+}
+
+fn crab_move2(current_cup: &u64, cups: &mut HashMap<u64, u64>, modulo: u64) -> u64 {
+    let mut range = vec![];
+    range.push(*cups.get(current_cup).unwrap());
+    range.push(*cups.get(range.last().unwrap()).unwrap());
+    range.push(*cups.get(range.last().unwrap()).unwrap());
+
+    let insert_idx = find_insert_index2(*current_cup, modulo, &range.as_slice());
+    // current -> after range
+    cups.insert(*current_cup, *cups.get(range.last().unwrap()).unwrap());
+
+    let tmp = *cups.get(&insert_idx).unwrap();
+    cups.insert(insert_idx, *range.first().unwrap());
+    cups.insert(*range.last().unwrap(), tmp);
+
+    *cups.get(current_cup).unwrap()
 }
 
 fn main() {
-    // let mut input: Vec<u32> = vec![3, 8, 9, 1, 2, 5, 4, 6, 7];
-    let mut input: Vec<u32> = vec![3, 6, 2, 9, 8, 1, 7, 5, 4];
-    let mut current_cup = 3;
-    for _ in 0..100 {
-        let res = crab_move(&current_cup, input);
-        current_cup = res.0;
-        input = res.1;
+    {
+        let input: Vec<u64> = vec![3, 6, 2, 9, 8, 1, 7, 5, 4];
+        let input_len = input.len();
+
+        let mut linked_list = into_linked_list(input);
+        let mut current_cup = 3;
+
+        for _ in 0..100 {
+            current_cup = crab_move2(&current_cup, &mut linked_list, input_len as u64);
+        }
+
+        let mut cur = 1;
+        print!("Part 1. ");
+        for _ in 1..9 {
+            let next = linked_list.get(&cur).unwrap();
+            print!("{}", next);
+            cur = *next;
+        }
+        println!();
     }
-    println!("Part 1. After 100 crab moves {:?}", &input);
+
+    {
+        let mut input: Vec<u64> = vec![3, 6, 2, 9, 8, 1, 7, 5, 4];
+        input.extend(10..1_000_001);
+
+        let input_len = input.len();
+
+        let mut linked_list = into_linked_list(input);
+        let mut current_cup = 3;
+
+        for _ in 0..10_000_000 {
+            current_cup = crab_move2(&current_cup, &mut linked_list, input_len as u64);
+        }
+
+        let first = linked_list.get(&1).unwrap();
+        let second = linked_list.get(first).unwrap();
+        println!(
+            "First: {} Second: {}. Product: {}",
+            first,
+            second,
+            first * second
+        );
+    }
 }
