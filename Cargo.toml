@@ -106,3 +106,7 @@ path = "src/crab_cups.rs"
 [[bin]]
 name = "lobby_layout"
 path = "src/lobby_layout.rs"
+
+[[bin]]
+name = "combo_breaker"
+path = "src/combo_breaker.rs"
